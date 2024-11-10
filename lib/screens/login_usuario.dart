@@ -11,11 +11,7 @@ class LoginUsuarioScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFC54444),
       appBar: AppBar(
-        title: const Text(
-          'Login',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF2B1C1C),
+        backgroundColor: const Color(0xFFC54444),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -83,39 +79,42 @@ class LoginUsuarioScreen extends StatelessWidget {
               obscureText: true,
               style: const TextStyle(color: Colors.black),
             ),
-            const SizedBox(height: 10),
-            // Checkbox "Manter-me Logado"
+            const SizedBox(height: 5),
+            // Row para alinhar "Esqueceu a Senha?" à direita e "Manter-me Logado" à esquerda
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Checkbox(
-                  value: false, // Adicionar a lógica para controlar o estado
-                  onChanged: (bool? value) {
-                    // Atualizar o estado de manter-me logado aqui
-                  },
-                  activeColor: const Color(0xFF2B1C1C),
+                // Checkbox "Manter-me Logado" alinhado à esquerda
+                Row(
+                  children: [
+                    Checkbox(
+                      value: false, // Adicionar a lógica para controlar o estado
+                      onChanged: (bool? value) {
+                        // Atualizar o estado de manter-me logado aqui
+                      },
+                      activeColor: const Color(0xFF2B1C1C),
+                    ),
+                    const Text(
+                      'Manter-me Logado',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
-                const Text(
-                  'Manter-me Logado',
-                  style: TextStyle(color: Colors.white),
+                // Esqueceu a Senha alinhado à direita
+                TextButton(
+                  onPressed: () {
+                    // Ação para recuperar a senha
+                  },
+                  child: const Text(
+                    'Esqueceu a Senha?',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  // Ação para recuperar a senha
-                },
-                child: const Text(
-                  'Esqueceu a Senha?',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Exemplo de validação simples
                 final email = emailController.text;
                 final senha = senhaController.text;
 
@@ -133,8 +132,8 @@ class LoginUsuarioScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B1C1C),
-                minimumSize: const Size(double.infinity, 50), // Tamanho mínimo do botão
-                padding: const EdgeInsets.symmetric(vertical: 15), // Aumenta a altura do botão
+                minimumSize: const Size(double.infinity, 50),
+                padding: const EdgeInsets.symmetric(vertical: 15),
               ),
               child: const Text(
                 'Acessar',
@@ -148,8 +147,8 @@ class LoginUsuarioScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B1C1C),
-                minimumSize: const Size(double.infinity, 50), // Tamanho mínimo do botão
-                padding: const EdgeInsets.symmetric(vertical: 15), // Aumenta a altura do botão
+                minimumSize: const Size(double.infinity, 50),
+                padding: const EdgeInsets.symmetric(vertical: 15),
               ),
               child: const Text(
                 'Criar conta',
