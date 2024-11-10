@@ -36,19 +36,19 @@ class _TelaInicialScreenState extends State<TelaInicialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remover o botão de retorno
         toolbarHeight: 120, // Define uma altura maior para a AppBar
         backgroundColor: const Color(0xFFC54444),
-        title: Center(
-          child: Image.asset(
-            'assets/logo.png', // Caminho da logo
-            height: 100, // Aumenta a altura da imagem
-            fit: BoxFit.contain, // Garante que a imagem não será cortada
-          ),
+        centerTitle: true, // Centraliza o título
+        title: Image.asset(
+          'assets/logo.png', // Caminho da logo
+          height: 100, // Aumenta a altura da imagem
+          fit: BoxFit.contain, // Garante que a imagem não será cortada
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart),
-            color: const Color(0xFF2B1C1C), // Define a cor do ícone do carrinho como branco
+            color: const Color(0xFF151414), // Define a cor do ícone do carrinho como branco
             onPressed: () {
               // Ação para o carrinho
             },
