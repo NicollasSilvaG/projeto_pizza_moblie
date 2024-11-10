@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import '../services/api_service.dart';
 
 class CadastroClienteScreen extends StatefulWidget {
   const CadastroClienteScreen({super.key});
 
   @override
-  _CadastroClienteScreenState createState() => _CadastroClienteScreenState();
+  CadastroClienteScreenState createState() => CadastroClienteScreenState();
 }
 
-class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
+class CadastroClienteScreenState extends State<CadastroClienteScreen> {
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
@@ -24,45 +25,61 @@ class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
   final maskTelefone = MaskTextInputFormatter(mask: '(##) # ####-####');
   final maskCep = MaskTextInputFormatter(mask: '#####-###');
 
-  void _onCadastrarPressed(BuildContext context) {
-    if (nomeController.text.isEmpty ||
-        emailController.text.isEmpty ||
-        telefoneController.text.isEmpty ||
-        senhaController.text.isEmpty ||
-        confirmSenhaController.text.isEmpty) {
+  final ApiService apiService = ApiService();
+
+  Future<void> _onCadastrarPressed() async {
+    final nome = nomeController.text;
+    final email = emailController.text;
+    final telefone = telefoneController.text;
+    final senha = senhaController.text;
+    final rua = ruaController.text;
+    final cidade = cidadeController.text;
+    final cep = cepController.text;
+    final bairro = bairroController.text;
+    final complemento = complementoController.text;
+    final confirmSenha = confirmSenhaController.text;
+
+    if (nome.isEmpty ||
+        email.isEmpty ||
+        telefone.isEmpty ||
+        senha.isEmpty ||
+        confirmSenha.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, preencha todos os campos obrigatórios.'),
-        ),
+        const SnackBar(content: Text('Preencha todos os campos obrigatórios!')),
+      );
+      return;
+    }
+    if (senha != confirmSenha) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As senhas não coincidem!')),
       );
       return;
     }
 
-    if (senhaController.text != confirmSenhaController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('As senhas não correspondem.'),
-        ),
+    try {
+      await apiService.cadastrarUsuario(
+        nome: nome,
+        email: email,
+        telefone: telefone,
+        senha: senha,
+        rua: rua,
+        cidade: cidade,
+        cep: cep,
+        bairro: bairro,
+        complemento: complemento,
+        uf: selectedUf,
       );
-      return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Cadastro realizado com sucesso!')),
+      );
+
+      Navigator.of(context).pop(); // Exemplo: volta para a tela anterior
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao cadastrar: $e')),
+      );
     }
-
-    // Lógica para o cadastro:
-
-
-    // Após o cadastro bem-sucedido:
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Usuário cadastrado com sucesso!'),
-      ),
-    );
-
-    // Aguarda 3 segundos antes de redirecionar para a tela de login
-    Future.delayed(const Duration(seconds: 2), () {
-      // Navega para a tela de login
-      Navigator.pushReplacementNamed(context, '/login');
-    });
   }
 
   @override
@@ -233,7 +250,8 @@ class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
                   decoration: InputDecoration(
                     labelText: 'Rua',
                     labelStyle: const TextStyle(color: Colors.black),
-                    prefixIcon: const Icon(Icons.location_on, color: Colors.black),
+                    prefixIcon:
+                        const Icon(Icons.location_on, color: Colors.black),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.1),
                     border: OutlineInputBorder(
@@ -251,7 +269,8 @@ class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
                   decoration: InputDecoration(
                     labelText: 'Complemento',
                     labelStyle: const TextStyle(color: Colors.black),
-                    prefixIcon: const Icon(Icons.apartment, color: Colors.black),
+                    prefixIcon:
+                        const Icon(Icons.apartment, color: Colors.black),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.1),
                     border: OutlineInputBorder(
@@ -287,7 +306,8 @@ class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
                   decoration: InputDecoration(
                     labelText: 'Cidade',
                     labelStyle: const TextStyle(color: Colors.black),
-                    prefixIcon: const Icon(Icons.location_city, color: Colors.black),
+                    prefixIcon:
+                        const Icon(Icons.location_city, color: Colors.black),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.1),
                     border: OutlineInputBorder(
@@ -334,7 +354,8 @@ class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
                   decoration: InputDecoration(
                     labelText: 'CEP',
                     labelStyle: const TextStyle(color: Colors.black),
-                    prefixIcon: const Icon(Icons.location_searching, color: Colors.black),
+                    prefixIcon: const Icon(Icons.location_searching,
+                        color: Colors.black),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.1),
                     border: OutlineInputBorder(
@@ -350,7 +371,7 @@ class _CadastroClienteScreenState extends State<CadastroClienteScreen> {
 
             // Botão de Cadastrar
             ElevatedButton(
-              onPressed: () => _onCadastrarPressed(context),
+              onPressed: _onCadastrarPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B1C1C),
                 minimumSize: const Size(double.infinity, 50),
