@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/cadastro_cliente.dart';
 import 'screens/login_usuario.dart';
+import 'screens/tela_inicial.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginUsuarioScreen(),
         '/cadastro': (context) => const CadastroClienteScreen(),
+        '/home': (context) => const TelaInicialScreen(),
       },
     );
   }
