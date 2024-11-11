@@ -93,6 +93,12 @@ class CadastroClienteScreenState extends State<CadastroClienteScreen> {
         ),
         backgroundColor: const Color(0xFF2B1C1C),
         iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -219,19 +225,6 @@ class CadastroClienteScreenState extends State<CadastroClienteScreen> {
               style: const TextStyle(color: Colors.black),
             ),
             const SizedBox(height: 20),
-
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                'O preenchimento dos dados de endereço não é necessário para criar a conta, '
-                'mas será obrigatório para fazer um pedido. Você poderá preenchê-los mais tarde.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFFFFD700),
-                ),
-                softWrap: true,
-              ),
-            ),
 
             ExpansionTile(
               title: const Text(

@@ -1,10 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginUsuarioScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
+  final FlutterSecureStorage storage =
+      FlutterSecureStorage(); // Definindo o 'storage'
 
   LoginUsuarioScreen({super.key});
+
+  Future<void> login(BuildContext context) async {
+    final email = emailController.text;
+    final senha = senhaController.text;
+
+    if (email.isEmpty || senha.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, preencha todos os campos'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3070/flutter/loginuser'),
+        body: jsonEncode({'email': email, 'senha': senha}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        // Armazena o token no storage seguro
+        if (data['token'] != null) {
+          await storage.write(key: 'token', value: data['token']);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login bem-sucedido!')),
+          );
+          // Navegue para a tela principal
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Erro ao receber o token')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Credenciais incorretas')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro de conexão')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +133,14 @@ class LoginUsuarioScreen extends StatelessWidget {
               style: const TextStyle(color: Colors.black),
             ),
             const SizedBox(height: 5),
-            // Row para alinhar "Esqueceu a Senha?" à direita e "Manter-me Logado" à esquerda
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Checkbox "Manter-me Logado" alinhado à esquerda
                 Row(
                   children: [
                     Checkbox(
-                      value: false, // Adicionar a lógica para controlar o estado
-                      onChanged: (bool? value) {
-                        // Atualizar o estado de manter-me logado aqui
-                      },
+                      value: false,
+                      onChanged: (bool? value) {},
                       activeColor: const Color(0xFF2B1C1C),
                     ),
                     const Text(
@@ -100,11 +149,8 @@ class LoginUsuarioScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Esqueceu a Senha alinhado à direita
                 TextButton(
-                  onPressed: () {
-                    // Ação para recuperar a senha
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'Esqueceu a Senha?',
                     style: TextStyle(color: Colors.white),
@@ -114,22 +160,7 @@ class LoginUsuarioScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                final email = emailController.text;
-                final senha = senhaController.text;
-
-                if (email.isEmpty || senha.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Por favor, preencha todos os campos'),
-                    ),
-                  );
-                } else {
-                  // Lógica de autenticação aqui
-                  // Exemplo: navegação após login bem-sucedido
-                  Navigator.pushReplacementNamed(context, '/home');
-                }
-              },
+              onPressed: () => login(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B1C1C),
                 minimumSize: const Size(double.infinity, 50),

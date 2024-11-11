@@ -4,10 +4,10 @@ class TelaInicialScreen extends StatefulWidget {
   const TelaInicialScreen({super.key});
 
   @override
-  _TelaInicialScreenState createState() => _TelaInicialScreenState();
+  TelaInicialScreenState createState() => TelaInicialScreenState();
 }
 
-class _TelaInicialScreenState extends State<TelaInicialScreen> {
+class TelaInicialScreenState extends State<TelaInicialScreen> {
   int _selectedIndex = 0;
 
   // Função para alternar entre as páginas
@@ -32,6 +32,15 @@ class _TelaInicialScreenState extends State<TelaInicialScreen> {
     }
   }
 
+  void _logout() {
+    // Aqui você deve adicionar a lógica de logout, dependendo do seu método de autenticação.
+    // Por exemplo, se estiver utilizando Firebase:
+    // FirebaseAuth.instance.signOut();
+
+    // Após deslogar, navegue para a tela de login
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,10 +57,16 @@ class _TelaInicialScreenState extends State<TelaInicialScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart),
-            color: const Color(0xFF2B1C1C), // Define a cor do ícone do carrinho como branco
+            color: const Color(
+                0xFF2B1C1C), // Define a cor do ícone do carrinho como branco
             onPressed: () {
               // Ação para o carrinho
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.exit_to_app), // Ícone de logout
+            color: const Color(0xFF2B1C1C), // Cor do ícone
+            onPressed: _logout, // Chama a função de logout
           ),
         ],
         elevation: 0,
@@ -70,7 +85,8 @@ class _TelaInicialScreenState extends State<TelaInicialScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 filled: true,
-                fillColor: const Color(0xFF2B1C1C).withOpacity(0.1), // Cor de fundo do campo de pesquisa
+                fillColor: const Color(0xFF2B1C1C)
+                    .withOpacity(0.1), // Cor de fundo do campo de pesquisa
               ),
             ),
             const SizedBox(height: 20),
@@ -121,7 +137,8 @@ class _TelaInicialScreenState extends State<TelaInicialScreen> {
                     name: 'Produto $index',
                     description: 'Descrição do produto $index.',
                     price: 'R\$ ${index * 5 + 10},00',
-                    imageUrl: 'https://via.placeholder.com/150', // Exemplo de imagem
+                    imageUrl:
+                        'https://via.placeholder.com/150', // Exemplo de imagem
                   );
                 },
               ),
@@ -170,13 +187,16 @@ class CategorySquare extends StatelessWidget {
       width: 80,
       margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF2B1C1C).withOpacity(0.1), // Usando a nova cor para fundo
+        color: const Color(0xFF2B1C1C)
+            .withOpacity(0.1), // Usando a nova cor para fundo
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 30, color: const Color(0xFF2B1C1C)), // Alterando a cor do ícone
+          Icon(icon,
+              size: 30,
+              color: const Color(0xFF2B1C1C)), // Alterando a cor do ícone
           const SizedBox(height: 5),
           Text(
             label,
@@ -195,7 +215,8 @@ class ProductCard extends StatelessWidget {
   final String price;
   final String imageUrl;
 
-  const ProductCard({super.key, 
+  const ProductCard({
+    super.key,
     required this.name,
     required this.description,
     required this.price,
@@ -212,11 +233,13 @@ class ProductCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Row( // Alterando o layout para um formato retangular
+        child: Row(
+          // Alterando o layout para um formato retangular
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.network( // Carregando a imagem do produto
+              child: Image.network(
+                // Carregando a imagem do produto
                 imageUrl,
                 width: 80,
                 height: 80,
@@ -224,20 +247,23 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12), // Espaçamento entre a imagem e o texto
-            Expanded( // Usando Expanded para ocupar o restante do espaço
+            Expanded(
+              // Usando Expanded para ocupar o restante do espaço
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                     overflow: TextOverflow.ellipsis, // Caso o nome seja longo
                   ),
                   const SizedBox(height: 5),
                   Text(
                     description,
                     style: TextStyle(color: Colors.grey[600]),
-                    overflow: TextOverflow.ellipsis, // Caso a descrição seja longa
+                    overflow:
+                        TextOverflow.ellipsis, // Caso a descrição seja longa
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -257,7 +283,8 @@ class ProductCard extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC54444),
-                          foregroundColor: Colors.white, // Define o texto do botão como branco
+                          foregroundColor: Colors
+                              .white, // Define o texto do botão como branco
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
