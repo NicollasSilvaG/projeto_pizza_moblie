@@ -74,7 +74,7 @@ class CadastroClienteScreenState extends State<CadastroClienteScreen> {
         SnackBar(content: Text('Cadastro realizado com sucesso!')),
       );
 
-      Navigator.of(context).pop(); // Exemplo: volta para a tela anterior
+      Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao cadastrar: $e')),

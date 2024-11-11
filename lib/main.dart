@@ -1,3 +1,5 @@
+import 'package:dom_pizzaria_moblie/screens/cupons.dart';
+import 'package:dom_pizzaria_moblie/screens/pedidos.dart';
 import 'package:flutter/material.dart';
 import 'screens/cadastro_cliente.dart';
 import 'screens/login_usuario.dart';
@@ -20,6 +22,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginUsuarioScreen(),
         '/cadastro': (context) => const CadastroClienteScreen(),
         '/home': (context) => const TelaInicialScreen(),
+        '/pedidos': (context) => const PedidosUsuarioScreen(),
+        '/cupons' : (context) => const CuponsScreen(),
       },
     );
   }
