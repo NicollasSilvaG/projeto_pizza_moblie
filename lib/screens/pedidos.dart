@@ -50,7 +50,7 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
             icon: const Icon(Icons.shopping_cart),
             color: const Color(0xFF151414), // Define a cor do ícone do carrinho como branco
             onPressed: () {
-              // Ação para o carrinho
+              Navigator.pushNamed(context, '/carrinho');
             },
           ),
         ],

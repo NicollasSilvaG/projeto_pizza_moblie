@@ -7,7 +7,7 @@ class LoginUsuarioScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
   final FlutterSecureStorage storage =
-      FlutterSecureStorage(); // Definindo o 'storage'
+      const FlutterSecureStorage(); // Definindo o 'storage'
 
   LoginUsuarioScreen({super.key});
 

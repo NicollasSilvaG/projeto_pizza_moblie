@@ -32,15 +32,6 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
     }
   }
 
-  void _logout() {
-    // Aqui você deve adicionar a lógica de logout, dependendo do seu método de autenticação.
-    // Por exemplo, se estiver utilizando Firebase:
-    // FirebaseAuth.instance.signOut();
-
-    // Após deslogar, navegue para a tela de login
-    Navigator.pushReplacementNamed(context, '/login');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,13 +50,8 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
             icon: const Icon(Icons.shopping_cart),
             color: const Color(0xFF2B1C1C), // Define a cor do ícone do carrinho como branco
             onPressed: () {
-              // Ação para o carrinho
+              Navigator.pushNamed(context, '/carrinho');
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.exit_to_app), // Ícone de logout
-            color: const Color(0xFF2B1C1C), // Cor do ícone
-            onPressed: _logout, // Chama a função de logout
           ),
         ],
         elevation: 0,
