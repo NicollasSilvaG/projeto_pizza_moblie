@@ -27,7 +27,7 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
         Navigator.pushNamed(context, '/cupons');
         break;
       case 3:
-        Navigator.pushNamed(context, '/perfil');
+        Navigator.pushNamed(context, '/conta');
         break;
     }
   }
@@ -98,7 +98,7 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Perfil',
+            label: 'Conta',
           ),
         ],
         currentIndex: _selectedIndex,

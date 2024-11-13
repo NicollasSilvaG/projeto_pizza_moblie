@@ -27,7 +27,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
         Navigator.pushNamed(context, '/cupons');
         break;
       case 3:
-        Navigator.pushNamed(context, '/perfil');
+        Navigator.pushNamed(context, '/conta');
         break;
     }
   }
@@ -147,7 +147,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Perfil',
+            label: 'Conta',
           ),
         ],
         currentIndex: _selectedIndex,

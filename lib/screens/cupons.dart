@@ -35,7 +35,7 @@ class _CuponsScreenState extends State<CuponsScreen> {
         // Já estamos na tela Cupons, então não faz nada
         break;
       case 3:
-        Navigator.pushNamed(context, '/perfil');
+        Navigator.pushNamed(context, '/conta');
         break;
     }
   }
@@ -151,7 +151,7 @@ class _CuponsScreenState extends State<CuponsScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Perfil',
+            label: 'Conta',
           ),
         ],
         currentIndex: _selectedIndex,
