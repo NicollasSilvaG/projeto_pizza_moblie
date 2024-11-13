@@ -174,7 +174,7 @@ class LoginUsuarioScreen extends StatelessWidget {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/home');
+                Navigator.pushNamed(context, '/cadastro');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B1C1C),
