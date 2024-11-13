@@ -63,12 +63,12 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Produtos Selecionados',  // Cor alterada para Color(0xFF2B1C1C)
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2B1C1C),
+                color: Color(0xFFC54444),
               ),
             ),
             const SizedBox(height: 16),
@@ -123,7 +123,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
 
             ElevatedButton(
               onPressed: () {
-                // Lógica para continuar com o pedido
+                Navigator.pushNamed(context, '/finalizar_pedido');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B1C1C),  // Cor alterada para o valor especificado
