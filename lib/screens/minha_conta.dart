@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MinhaContaScreen extends StatelessWidget {
-  final String nomeUsuario = "Usuário Exemplo";
+  final String nomeUsuario = "Usuário";
 
   const MinhaContaScreen({super.key});
 

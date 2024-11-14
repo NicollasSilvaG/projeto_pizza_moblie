@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const TelaInicialScreen(),
         '/pedidos': (context) => const PedidosUsuarioScreen(),
         '/cupons' : (context) => const CuponsScreen(),
-        '/conta' : (context) => MinhaContaScreen(),
+        '/conta' : (context) => const MinhaContaScreen(),
         '/carrinho' : (context) => const CarrinhoScreen(),
         '/finalizar_pedido' : (context) => const FinalizarPedidoScreen(),
       },

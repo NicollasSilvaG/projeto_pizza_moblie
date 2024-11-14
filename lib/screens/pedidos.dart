@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PedidosUsuarioScreen extends StatefulWidget {
   const PedidosUsuarioScreen({super.key});
@@ -9,6 +10,44 @@ class PedidosUsuarioScreen extends StatefulWidget {
 
 class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
   int _selectedIndex = 1; // O índice 1 é para "Pedidos"
+  String _searchQuery = '';
+  final List<Map<String, String>> _pedidos = [
+    {
+      "dataPedido": "26/10/2024",
+      "produto": "Pizza de Calabresa com Queijo",
+      "valorTotal": "R\$ 45,00",
+      "status": "Entregue",
+    },
+    {
+      "dataPedido": "14/11/2024",
+      "produto": "Pizza Portuguesa",
+      "valorTotal": "R\$ 50,00",
+      "status": "A caminho",
+    },
+    {
+      "dataPedido": "13/04/2023",
+      "produto": "Pizza de Frango com Catupiry",
+      "valorTotal": "R\$ 48,00",
+      "status": "Entregue",
+    },
+    {
+      "dataPedido": "02/10/2023",
+      "produto": "Pizza de Calabresa",
+      "valorTotal": "R\$ 45,00",
+      "status": "Entregue",
+    },
+  ];
+
+  DateTime _parseDate(String date) {
+    return DateFormat("dd/MM/yyyy").parse(date);
+  }
+
+  // Função para filtrar os pedidos
+  List<Map<String, String>> get _filteredPedidos {
+    return _pedidos.where((pedido) {
+      return pedido['produto']!.toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
+  }
 
   // Função para alternar entre as páginas
   void _onItemTapped(int index) {
@@ -18,10 +57,9 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/home'); // Corrigido para a rota /home
+        Navigator.pushNamed(context, '/home');
         break;
       case 1:
-        // Já estamos na tela Pedidos, então não faz nada
         break;
       case 2:
         Navigator.pushNamed(context, '/cupons');
@@ -36,19 +74,19 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Remover o botão de retorno
-        toolbarHeight: 120, // Define uma altura maior para a AppBar
+        automaticallyImplyLeading: false,
+        toolbarHeight: 120,
         backgroundColor: const Color(0xFFC54444),
-        centerTitle: true, // Centraliza o título
+        centerTitle: true,
         title: Image.asset(
-          'assets/logo.png', // Caminho da logo
-          height: 100, // Aumenta a altura da imagem
-          fit: BoxFit.contain, // Garante que a imagem não será cortada
+          'assets/logo.png',
+          height: 100,
+          fit: BoxFit.contain,
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart),
-            color: const Color(0xFF151414), // Define a cor do ícone do carrinho como branco
+            color: const Color(0xFF151414),
             onPressed: () {
               Navigator.pushNamed(context, '/carrinho');
             },
@@ -56,29 +94,118 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
         ],
         elevation: 0,
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Título "Pedidos"
-            Text(
+            const Text(
               'Pedidos',
               style: TextStyle(
-                fontSize: 24, // Aumenta o tamanho da fonte
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Cor do título
+                color: Colors.black,
               ),
             ),
-            SizedBox(height: 20), // Espaço entre o título e o conteúdo
+            const SizedBox(height: 20),
 
-            // Exibindo o texto com conteúdo de pedidos
-            Text(
-              'Aqui vai o conteúdo de pedidos',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // Campo de pesquisa
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+              decoration: const InputDecoration(
+                hintText: 'Pesquisar pedidos...',
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.search),
+              ),
             ),
-            SizedBox(height: 20),
-            // Adicione o conteúdo de pedidos aqui
+            const SizedBox(height: 20),
+
+            // Lista de pedidos filtrados
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredPedidos.length,
+                itemBuilder: (context, index) {
+                  final pedido = _filteredPedidos[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                          // Exibindo a imagem com bordas arredondadas
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12), // Borda arredondada
+                            child: Image.asset(
+                              'assets/150x150.jpg', // Caminho da nova imagem
+                              width: 80, // Novo tamanho
+                              height: 80, // Novo tamanho
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Informações do pedido
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Pedido em ${pedido['dataPedido']}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  pedido['produto']!,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "Valor Total: ${pedido['valorTotal']}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "Status: ${pedido['status']}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, '/detalhes_pedido',
+                                          arguments: pedido);
+                                    },
+                                    child: const Text("Ver mais"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

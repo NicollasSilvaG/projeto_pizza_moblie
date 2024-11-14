@@ -122,8 +122,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
                     name: 'Produto $index',
                     description: 'Descrição do produto $index.',
                     price: 'R\$ ${index * 5 + 10},00',
-                    imageUrl:
-                        'https://via.placeholder.com/150', // Exemplo de imagem
+                    imageUrl: 'assets/150x150.jpg', // Caminho da imagem local
                   );
                 },
               ),
@@ -223,8 +222,8 @@ class ProductCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                // Carregando a imagem do produto
+              child: Image.asset(
+                // Carregando a imagem local do produto
                 imageUrl,
                 width: 80,
                 height: 80,
