@@ -190,8 +190,10 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       Navigator.pushNamed(
-                                          context, '/detalhes_pedido',
-                                          arguments: pedido);
+                                        context,
+                                        '/detalhes_pedido',
+                                        arguments: pedido, // Passa o pedido como argumento
+                                      );
                                     },
                                     child: const Text("Ver mais"),
                                   ),

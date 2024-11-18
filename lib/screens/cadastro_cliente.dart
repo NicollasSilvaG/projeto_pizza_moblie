@@ -71,7 +71,7 @@ class CadastroClienteScreenState extends State<CadastroClienteScreen> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Cadastro realizado com sucesso!')),
+        const SnackBar(content: Text('Cadastro realizado com sucesso!')),
       );
 
       Navigator.pushReplacementNamed(context, '/login');

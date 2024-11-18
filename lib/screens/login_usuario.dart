@@ -26,7 +26,7 @@ class LoginUsuarioScreen extends StatelessWidget {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:3070/flutter/loginuser'),
+        Uri.parse('http://10.0.2.2:3070/flutter/loginuser'),
         body: jsonEncode({'email': email, 'senha': senha}),
         headers: {'Content-Type': 'application/json'},
       );

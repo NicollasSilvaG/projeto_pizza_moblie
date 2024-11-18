@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert'; // Para converter JSON
+import 'package:http/http.dart' as http;
 
 class TelaInicialScreen extends StatefulWidget {
   const TelaInicialScreen({super.key});
@@ -9,6 +11,31 @@ class TelaInicialScreen extends StatefulWidget {
 
 class TelaInicialScreenState extends State<TelaInicialScreen> {
   int _selectedIndex = 0;
+  List<dynamic> produtos = []; // Lista para armazenar os produtos
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProdutos(); // Buscar produtos na inicialização
+  }
+
+  Future<void> fetchProdutos() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:3070/flutter/produtos'), // Endpoint da API
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          produtos = json.decode(response.body); // Converte JSON para lista
+        });
+      } else {
+        throw Exception('Erro ao buscar produtos: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Erro ao buscar produtos: $error');
+    }
+  }
 
   // Função para alternar entre as páginas
   void _onItemTapped(int index) {
@@ -18,8 +45,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
 
     switch (index) {
       case 0:
-        // Tela Home (já está nessa tela)
-        break;
+        break; // Permanece na tela atual
       case 1:
         Navigator.pushNamed(context, '/pedidos');
         break;
@@ -36,19 +62,19 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Remover o botão de retorno
-        toolbarHeight: 120, // Define uma altura maior para a AppBar
+        automaticallyImplyLeading: false,
+        toolbarHeight: 120,
         backgroundColor: const Color(0xFFC54444),
-        centerTitle: true, // Centraliza o título
+        centerTitle: true,
         title: Image.asset(
-          'assets/logo.png', // Caminho da logo
-          height: 100, // Aumenta a altura da imagem
-          fit: BoxFit.contain, // Garante que a imagem não será cortada
+          'assets/logo.png',
+          height: 100,
+          fit: BoxFit.contain,
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart),
-            color: const Color(0xFF2B1C1C), // Define a cor do ícone do carrinho como branco
+            color: const Color(0xFF2B1C1C),
             onPressed: () {
               Navigator.pushNamed(context, '/carrinho');
             },
@@ -70,8 +96,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 filled: true,
-                fillColor: const Color(0xFF2B1C1C)
-                    .withOpacity(0.1), // Cor de fundo do campo de pesquisa
+                fillColor: const Color(0xFF2B1C1C).withOpacity(0.1),
               ),
             ),
             const SizedBox(height: 20),
@@ -114,18 +139,23 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
+
+            // Exibição dos produtos dinamicamente
             Expanded(
-              child: ListView.builder(
-                itemCount: 10, // Substitua pelo número real de produtos
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    name: 'Produto $index',
-                    description: 'Descrição do produto $index.',
-                    price: 'R\$ ${index * 5 + 10},00',
-                    imageUrl: 'assets/150x150.jpg', // Caminho da imagem local
-                  );
-                },
-              ),
+              child: produtos.isEmpty
+                  ? const Center(child: CircularProgressIndicator()) // Indicador de carregamento
+                  : ListView.builder(
+                      itemCount: produtos.length,
+                      itemBuilder: (context, index) {
+                        final produto = produtos[index];
+                        return ProductCard(
+                          name: produto['nome'],
+                          description: produto['descricao'],
+                          price: 'R\$ ${produto['preco'].toString()}',
+                          imageUrl: 'assets/150x150.jpg', // Exemplo de imagem local
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -171,16 +201,13 @@ class CategorySquare extends StatelessWidget {
       width: 80,
       margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF2B1C1C)
-            .withOpacity(0.1), // Usando a nova cor para fundo
+        color: const Color(0xFF2B1C1C).withOpacity(0.1),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon,
-              size: 30,
-              color: const Color(0xFF2B1C1C)), // Alterando a cor do ícone
+          Icon(icon, size: 30, color: const Color(0xFF2B1C1C)),
           const SizedBox(height: 5),
           Text(
             label,
@@ -218,21 +245,18 @@ class ProductCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
-          // Alterando o layout para um formato retangular
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.asset(
-                // Carregando a imagem local do produto
                 imageUrl,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(width: 12), // Espaçamento entre a imagem e o texto
+            const SizedBox(width: 12),
             Expanded(
-              // Usando Expanded para ocupar o restante do espaço
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -240,14 +264,13 @@ class ProductCard extends StatelessWidget {
                     name,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 16),
-                    overflow: TextOverflow.ellipsis, // Caso o nome seja longo
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 5),
                   Text(
                     description,
                     style: TextStyle(color: Colors.grey[600]),
-                    overflow:
-                        TextOverflow.ellipsis, // Caso a descrição seja longa
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -263,12 +286,11 @@ class ProductCard extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          // Ação de adicionar ao carrinho
+                          // Lógica para adicionar ao carrinho
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC54444),
-                          foregroundColor: Colors
-                              .white, // Define o texto do botão como branco
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
