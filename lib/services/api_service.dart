@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
-  final String baseUrl = 'http://localhost:3070';
-  final storage = FlutterSecureStorage();
+  final String baseUrl = 'http://10.0.2.2:3070';
+  final storage = const FlutterSecureStorage();
 
   Future<void> cadastrarUsuario({
     required String nome,

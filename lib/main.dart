@@ -1,3 +1,4 @@
+import 'package:dom_pizzaria_moblie/screens/detalhesProduto.dart';
 import 'package:dom_pizzaria_moblie/screens/detalhes_pedido.dart';
 import 'package:flutter/material.dart';
 import 'package:dom_pizzaria_moblie/screens/carrinho.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginUsuarioScreen(),
         '/cadastro': (context) => const CadastroClienteScreen(),
         '/home': (context) => const TelaInicialScreen(),
+        '/detalhesProduto': (context) => const DetalhesProdutoScreen(),
         '/pedidos': (context) => const PedidosUsuarioScreen(),
         '/cupons': (context) => const CuponsScreen(),
         '/conta': (context) => const MinhaContaScreen(),

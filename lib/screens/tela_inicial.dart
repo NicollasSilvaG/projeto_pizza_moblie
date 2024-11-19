@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:convert'; // Para converter JSON
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TelaInicialScreen extends StatefulWidget {
@@ -11,23 +11,29 @@ class TelaInicialScreen extends StatefulWidget {
 
 class TelaInicialScreenState extends State<TelaInicialScreen> {
   int _selectedIndex = 0;
-  List<dynamic> produtos = []; // Lista para armazenar os produtos
+  List<dynamic> produtos = [];
+  List<dynamic> produtosFiltrados = [];
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    fetchProdutos(); // Buscar produtos na inicialização
+    fetchProdutos();
+    _searchController.addListener(() {
+      filtrarProdutos(_searchController.text);
+    });
   }
 
   Future<void> fetchProdutos() async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:3070/flutter/produtos'), // Endpoint da API
+        Uri.parse('http://10.0.2.2:3070/flutter/produtos'),
       );
 
       if (response.statusCode == 200) {
         setState(() {
-          produtos = json.decode(response.body); // Converte JSON para lista
+          produtos = json.decode(response.body);
+          produtosFiltrados = produtos;
         });
       } else {
         throw Exception('Erro ao buscar produtos: ${response.statusCode}');
@@ -37,7 +43,22 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
     }
   }
 
-  // Função para alternar entre as páginas
+  void filtrarProdutos(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        produtosFiltrados = produtos;
+      });
+    } else {
+      setState(() {
+        produtosFiltrados = produtos.where((produto) {
+          final nome = produto['nome'].toLowerCase();
+          final textoBusca = query.toLowerCase();
+          return nome.contains(textoBusca);
+        }).toList();
+      });
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -45,7 +66,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
 
     switch (index) {
       case 0:
-        break; // Permanece na tela atual
+        break;
       case 1:
         Navigator.pushNamed(context, '/pedidos');
         break;
@@ -82,82 +103,65 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
         ],
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Campo de Pesquisa
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Pesquisar produtos',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+      body: RefreshIndicator(
+        onRefresh: fetchProdutos,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  labelText: 'Pesquisar produtos',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFF2B1C1C).withOpacity(0.1),
                 ),
-                filled: true,
-                fillColor: const Color(0xFF2B1C1C).withOpacity(0.1),
               ),
-            ),
-            const SizedBox(height: 20),
-
-            // Seção de Categorias em quadrados com ícones
-            const Text(
-              'Categorias',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: const [
-                  CategorySquare(
-                    icon: Icons.local_pizza,
-                    label: 'Pizza',
-                  ),
-                  CategorySquare(
-                    icon: Icons.local_drink,
-                    label: 'Bebidas',
-                  ),
-                  CategorySquare(
-                    icon: Icons.cake,
-                    label: 'Sobremesas',
-                  ),
-                  CategorySquare(
-                    icon: Icons.fastfood,
-                    label: 'Sanduíches',
-                  ),
-                ],
+              const SizedBox(height: 20),
+              const Text(
+                'Produtos',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 20),
-
-            // Seção de Produtos
-            const Text(
-              'Produtos',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-
-            // Exibição dos produtos dinamicamente
-            Expanded(
-              child: produtos.isEmpty
-                  ? const Center(child: CircularProgressIndicator()) // Indicador de carregamento
-                  : ListView.builder(
-                      itemCount: produtos.length,
-                      itemBuilder: (context, index) {
-                        final produto = produtos[index];
-                        return ProductCard(
-                          name: produto['nome'],
-                          description: produto['descricao'],
-                          price: 'R\$ ${produto['preco'].toString()}',
-                          imageUrl: 'assets/150x150.jpg', // Exemplo de imagem local
-                        );
-                      },
-                    ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Expanded(
+                child: produtosFiltrados.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        itemCount: produtosFiltrados.length,
+                        itemBuilder: (context, index) {
+                          final produto = produtosFiltrados[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/detalhesProduto',
+                                arguments: {
+                                  'name': produto['nome'],
+                                  'description': produto['descricao'],
+                                  'price': 'R\$ ${produto['preco'].toString().replaceAll('.', ',')}',
+                                  'size': produto['tamanho'],
+                                  'imageUrl': 'assets/150x150.jpg',
+                                },
+                              );
+                            },
+                            child: ProductCard(
+                              name: produto['nome'],
+                              description: produto['descricao'],
+                              price: 'R\$ ${produto['preco'].toString().replaceAll('.', ',')}',
+                              size: produto['tamanho'],
+                              imageUrl: 'assets/150x150.jpg',
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -188,42 +192,11 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
   }
 }
 
-// Widget para exibir categorias em quadrados com ícones
-class CategorySquare extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const CategorySquare({super.key, required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      margin: const EdgeInsets.only(right: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2B1C1C).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 30, color: const Color(0xFF2B1C1C)),
-          const SizedBox(height: 5),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Widget para exibir um produto no formato retangular
 class ProductCard extends StatelessWidget {
   final String name;
   final String description;
   final String price;
+  final String size;
   final String imageUrl;
 
   const ProductCard({
@@ -231,6 +204,7 @@ class ProductCard extends StatelessWidget {
     required this.name,
     required this.description,
     required this.price,
+    required this.size,
     required this.imageUrl,
   });
 
@@ -271,6 +245,11 @@ class ProductCard extends StatelessWidget {
                     description,
                     style: TextStyle(color: Colors.grey[600]),
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    'Tamanho: $size',
+                    style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 10),
                   Row(
