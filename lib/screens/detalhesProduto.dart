@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DetalhesProdutoScreen extends StatelessWidget {
   const DetalhesProdutoScreen({super.key});
@@ -21,11 +22,14 @@ class DetalhesProdutoScreen extends StatelessWidget {
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  produto['imageUrl'],
+                child: CachedNetworkImage(
+                  imageUrl: produto['imageUrl'],
                   width: 200,
                   height: 200,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
             ),

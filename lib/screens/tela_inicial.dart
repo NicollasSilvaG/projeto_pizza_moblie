@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TelaInicialScreen extends StatefulWidget {
   const TelaInicialScreen({super.key});
@@ -135,6 +136,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
                         itemCount: produtosFiltrados.length,
                         itemBuilder: (context, index) {
                           final produto = produtosFiltrados[index];
+                          final imageUrl = 'http://10.0.2.2:3070/${produto['imagem']}';
                           return InkWell(
                             onTap: () {
                               Navigator.pushNamed(
@@ -145,7 +147,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
                                   'description': produto['descricao'],
                                   'price': 'R\$ ${produto['preco'].toString().replaceAll('.', ',')}',
                                   'size': produto['tamanho'],
-                                  'imageUrl': 'assets/150x150.jpg',
+                                  'imageUrl': imageUrl,
                                 },
                               );
                             },
@@ -154,7 +156,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
                               description: produto['descricao'],
                               price: 'R\$ ${produto['preco'].toString().replaceAll('.', ',')}',
                               size: produto['tamanho'],
-                              imageUrl: 'assets/150x150.jpg',
+                              imageUrl: imageUrl, // Correção aqui
                             ),
                           );
                         },
@@ -222,11 +224,13 @@ class ProductCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
-                imageUrl,
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             const SizedBox(width: 12),
