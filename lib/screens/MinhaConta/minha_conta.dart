@@ -35,13 +35,13 @@ class MinhaContaScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Colors.grey[200], // Cor de fundo do container
-              borderRadius: BorderRadius.circular(12.0), // Bordas arredondadas
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: Row(
               children: [
-                const Icon(Icons.person, size: 40), // Ícone de usuário
-                const SizedBox(width: 12), // Espaço entre o ícone e o texto
+                const Icon(Icons.person, size: 40),
+                const SizedBox(width: 12),
                 Text(
                   nomeUsuario,
                   style: const TextStyle(
@@ -52,13 +52,14 @@ class MinhaContaScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20), // Espaço entre o container e os itens seguintes
+          const SizedBox(height: 20),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.lock),
             title: const Text("Conta & Segurança"),
             onTap: () {
               // Navegar para a tela de Conta & Segurança
+              Navigator.pushNamed(context, '/conta_seguranca');
             },
           ),
           const Divider(),
@@ -84,7 +85,7 @@ class MinhaContaScreen extends StatelessWidget {
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                '/login', // Tela de login
+                '/login',
                 (route) => false,
               );
             },
@@ -98,7 +99,7 @@ class MinhaContaScreen extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
+            icon: Icon(Icons.list_alt_sharp),
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(
@@ -110,7 +111,7 @@ class MinhaContaScreen extends StatelessWidget {
             label: 'Conta',
           ),
         ],
-        currentIndex: 3, // Define o índice da aba "Perfil"
+        currentIndex: 3,
         selectedItemColor: const Color(0xFFC54444),
         unselectedItemColor: Colors.grey,
         onTap: (index) {

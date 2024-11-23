@@ -109,27 +109,30 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Campo de pesquisa
+            // Campo de pesquisa atualizado
             TextField(
               onChanged: (value) {
                 setState(() {
                   _searchQuery = value;
                 });
               },
+              style: const TextStyle(color: Colors.black, fontSize: 16),
               decoration: InputDecoration(
                 hintText: 'Pesquisar pedidos...',
-                hintStyle: TextStyle(color: Colors.grey[600]), // Estilo do texto de dica
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0), // Bordas arredondadas
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(color: Colors.red), // Cor da borda ao focar
-                ),
-                suffixIcon: Icon(
+                hintStyle: TextStyle(color: Colors.grey[600]),
+                prefixIcon: const Icon(
                   Icons.search,
-                  color: Colors.grey[600], // Cor do ícone
+                  color: Colors.grey,
+                ),
+                filled: true,
+                fillColor: Colors.grey[200], // Fundo do campo
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10), // Bordas arredondadas
+                  borderSide: BorderSide.none, // Sem bordas visíveis
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 15.0,
+                  horizontal: 15.0,
                 ),
               ),
             ),
@@ -229,7 +232,7 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
+            icon: Icon(Icons.list_alt_sharp),
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(

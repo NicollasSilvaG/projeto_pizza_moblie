@@ -249,7 +249,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
+            icon: Icon(Icons.list_alt_sharp),
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(

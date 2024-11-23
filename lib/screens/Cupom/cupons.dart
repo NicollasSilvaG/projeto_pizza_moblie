@@ -10,8 +10,6 @@ class CuponsScreen extends StatefulWidget {
 class _CuponsScreenState extends State<CuponsScreen> {
   int _selectedIndex = 2; // O índice 2 é para "Cupons"
 
-  final TextEditingController _cupomController = TextEditingController();
-
   // Lista de cupons ativos (simulando dados)
   final List<Map<String, String>> cuponsAtivos = [
     {'codigo': 'PROMO10', 'desconto': '10%', 'status': 'Ativo'},
@@ -37,20 +35,6 @@ class _CuponsScreenState extends State<CuponsScreen> {
       case 3:
         Navigator.pushNamed(context, '/conta');
         break;
-    }
-  }
-
-  // Função para adicionar um novo cupom
-  void _adicionarCupom() {
-    if (_cupomController.text.isNotEmpty) {
-      setState(() {
-        cuponsAtivos.add({
-          'codigo': _cupomController.text,
-          'desconto': '10%', // Exemplo de desconto, isso pode vir de uma API ou de outro lugar
-          'status': 'Ativo',
-        });
-        _cupomController.clear();
-      });
     }
   }
 
@@ -94,20 +78,6 @@ class _CuponsScreenState extends State<CuponsScreen> {
             ),
             const SizedBox(height: 20), // Espaço entre o título e o conteúdo
 
-            // Campo de inserção de cupom
-            TextField(
-              controller: _cupomController,
-              decoration: InputDecoration(
-                labelText: 'Digite o código do cupom',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: _adicionarCupom,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
             // Exibindo a lista de cupons ativos
             const Text(
               'Cupons Ativos:',
@@ -142,7 +112,7 @@ class _CuponsScreenState extends State<CuponsScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
+            icon: Icon(Icons.list_alt_sharp),
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(

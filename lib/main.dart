@@ -1,15 +1,18 @@
-import 'package:dom_pizzaria_moblie/screens/detalhesProduto.dart';
-import 'package:dom_pizzaria_moblie/screens/detalhes_pedido.dart';
 import 'package:flutter/material.dart';
-import 'package:dom_pizzaria_moblie/screens/carrinho.dart';
-import 'package:dom_pizzaria_moblie/screens/cupons.dart';
-import 'package:dom_pizzaria_moblie/screens/finalizar_pedido.dart';
-import 'package:dom_pizzaria_moblie/screens/minha_conta.dart';
-import 'package:dom_pizzaria_moblie/screens/pedidos.dart';
-
-import 'screens/cadastro_cliente.dart';
-import 'screens/login_usuario.dart';
+import 'screens/Login_Cadastro/cadastro_cliente.dart';
+import 'screens/Login_Cadastro/login_usuario.dart';
 import 'screens/tela_inicial.dart';
+import 'package:dom_pizzaria_moblie/screens/Produto/detalhesProduto.dart';
+import 'package:dom_pizzaria_moblie/screens/Pedidos/carrinho.dart';
+import 'package:dom_pizzaria_moblie/screens/Pedidos/pedidos.dart';
+import 'package:dom_pizzaria_moblie/screens/Pedidos/detalhes_pedido.dart';
+import 'package:dom_pizzaria_moblie/screens/Pedidos/finalizar_pedido.dart';
+import 'package:dom_pizzaria_moblie/screens/Cupom/cupons.dart';
+import 'package:dom_pizzaria_moblie/screens/MinhaConta/minha_conta.dart';
+import 'package:dom_pizzaria_moblie/screens/MinhaConta/ContaSegurancaScreen.dart';
+import 'package:dom_pizzaria_moblie/screens/MinhaConta/AtualizarPerfil.dart';
+import 'package:dom_pizzaria_moblie/screens/MinhaConta/AlterarEndereco.dart';
+import 'package:dom_pizzaria_moblie/screens/MinhaConta/AlterarSenha.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,17 +32,20 @@ class MyApp extends StatelessWidget {
         '/cadastro': (context) => const CadastroClienteScreen(),
         '/home': (context) => const TelaInicialScreen(),
         '/detalhesProduto': (context) => const DetalhesProdutoScreen(),
-        '/pedidos': (context) => const PedidosUsuarioScreen(),
-        '/cupons': (context) => const CuponsScreen(),
-        '/conta': (context) => const MinhaContaScreen(),
         '/carrinho': (context) => const CarrinhoScreen(),
+        '/pedidos': (context) => const PedidosUsuarioScreen(),
         '/finalizar_pedido': (context) => const FinalizarPedidoScreen(),
-        
-        // Nova rota para a tela de Visualizar Pedido
         '/detalhes_pedido': (context) {
           final Map<String, String> pedido = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
           return VisualizarPedidoScreen(pedido: pedido);
         },
+        '/cupons': (context) => const CuponsScreen(),
+        '/conta': (context) => const MinhaContaScreen(),
+        '/conta_seguranca': (context) => const ContaSegurancaScreen(),
+        '/atualizar_perfil': (context) => const AtualizarPerfilScreen(),
+        '/alterar_endereco': (context) => const AlterarEnderecoScreen(),
+        '/alterar_senha': (context) => const AlterarSenhaScreen(),
+
       },
     );
   }
