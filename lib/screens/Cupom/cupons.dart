@@ -11,7 +11,6 @@ class CuponsScreen extends StatefulWidget {
 
 class _CuponsScreenState extends State<CuponsScreen> {
   int _selectedIndex = 2; // O índice 2 é para "Cupons"
-  final TextEditingController _cupomController = TextEditingController();
 
   // Função para buscar cupons do backend
   Future<List<Map<String, dynamic>>> _buscarCuponsAtivos() async {
@@ -82,21 +81,6 @@ class _CuponsScreenState extends State<CuponsScreen> {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Campo de inserção de cupom
-            TextField(
-              controller: _cupomController,
-              decoration: InputDecoration(
-                labelText: 'Digite o código do cupom',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    // Função de adicionar cupom
-                  },
-                ),
               ),
             ),
             const SizedBox(height: 20),

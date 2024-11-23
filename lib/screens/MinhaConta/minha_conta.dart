@@ -40,7 +40,7 @@ class MinhaContaScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.person, size: 40),
+                const Icon(Icons.account_circle, size: 40),
                 const SizedBox(width: 12),
                 Text(
                   nomeUsuario,
