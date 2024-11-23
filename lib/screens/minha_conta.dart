@@ -102,7 +102,7 @@ class MinhaContaScreen extends StatelessWidget {
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
+            icon: Icon(Icons.local_offer),
             label: 'Cupons',
           ),
           BottomNavigationBarItem(

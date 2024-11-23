@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class DetalhesProdutoScreen extends StatelessWidget {
+class DetalhesProdutoScreen extends StatefulWidget {
   const DetalhesProdutoScreen({super.key});
+
+  @override
+  _DetalhesProdutoScreenState createState() => _DetalhesProdutoScreenState();
+}
+
+class _DetalhesProdutoScreenState extends State<DetalhesProdutoScreen> {
+  int quantidade = 1;
+
+  void _incrementarQuantidade() {
+    setState(() {
+      quantidade++;
+    });
+  }
+
+  void _decrementarQuantidade() {
+    if (quantidade > 1) {
+      setState(() {
+        quantidade--;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +50,8 @@ class DetalhesProdutoScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
                 ),
               ),
             ),
@@ -51,16 +73,63 @@ class DetalhesProdutoScreen extends StatelessWidget {
                   fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
             ),
             const SizedBox(height: 20),
-            Text(
-              produto['price'],
-              style: const TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFC54444)),
+            
+            // Preço do produto
+            Row(
+              children: [
+                Text(
+                  produto['price'],
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFC54444)),
+                ),
+                const SizedBox(width: 20),
+
+                // Botão de diminuir
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFC54444),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.remove, color: Colors.white),
+                    onPressed: _decrementarQuantidade,
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                // Texto da quantidade
+                Text(
+                  '$quantidade',
+                  style: const TextStyle(fontSize: 20),
+                ),
+                const SizedBox(width: 10),
+
+                // Botão de aumentar
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFC54444),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    onPressed: _incrementarQuantidade,
+                  ),
+                ),
+              ],
             ),
+
             const SizedBox(height: 30),
-            ElevatedButton(
+
+            // Botão de adicionar ao carrinho com ícone
+            ElevatedButton.icon(
               onPressed: () {
                 // Lógica para adicionar ao carrinho
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${produto['name']} adicionado ao carrinho!')),
+                );
               },
+              icon: const Icon(Icons.add_shopping_cart),
+              label: const Text('Adicionar ao Carrinho'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFC54444),
                 foregroundColor: Colors.white,
@@ -69,7 +138,6 @@ class DetalhesProdutoScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
-              child: const Text('Adicionar ao Carrinho'),
             ),
           ],
         ),

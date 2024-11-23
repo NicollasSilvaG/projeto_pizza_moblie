@@ -116,10 +116,21 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
                   _searchQuery = value;
                 });
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Pesquisar pedidos...',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.search),
+                hintStyle: TextStyle(color: Colors.grey[600]), // Estilo do texto de dica
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0), // Bordas arredondadas
+                  borderSide: BorderSide(color: Colors.grey[300]!),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(color: Colors.red), // Cor da borda ao focar
+                ),
+                suffixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey[600], // Cor do ícone
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -222,7 +233,7 @@ class _PedidosUsuarioScreenState extends State<PedidosUsuarioScreen> {
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
+            icon: Icon(Icons.local_offer),
             label: 'Cupons',
           ),
           BottomNavigationBarItem(

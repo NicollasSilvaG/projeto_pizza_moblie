@@ -14,12 +14,14 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
   int _selectedIndex = 0;
   List<dynamic> produtos = [];
   List<dynamic> produtosFiltrados = [];
+  List<dynamic> categorias = []; // Lista para armazenar as categorias
   TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchProdutos();
+    fetchCategorias(); // Chama a função para buscar categorias
     _searchController.addListener(() {
       filtrarProdutos(_searchController.text);
     });
@@ -40,7 +42,31 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
         throw Exception('Erro ao buscar produtos: ${response.statusCode}');
       }
     } catch (error) {
-      print('Erro ao buscar produtos: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar produtos: $error'),
+        ),
+      );
+    }
+  }
+
+  Future<void> fetchCategorias() async {
+    try {
+      final response = await http.get(Uri.parse('http://10.0.2.2:3070/flutter/categorias'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          categorias = json.decode(response.body);
+        });
+      } else {
+        throw Exception('Erro ao buscar categorias: ${response.statusCode}');
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar categorias: $error'),
+        ),
+      );
     }
   }
 
@@ -80,6 +106,14 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
     }
   }
 
+  void adicionarAoCarrinho(Map<String, dynamic> produto) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${produto['nome']} adicionado ao carrinho!'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,19 +145,53 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Campo de pesquisa
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  labelText: 'Pesquisar produtos',
-                  prefixIcon: const Icon(Icons.search),
+                  hintText: 'Pesquisar produtos...',
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: const Color(0xFF2B1C1C).withOpacity(0.1),
+                  fillColor: Colors.grey[200],
+                  contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
                 ),
               ),
               const SizedBox(height: 20),
+
+              // Exibição das categorias
+              const Text(
+                'Categorias',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              categorias.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : Container(
+                      height: 50, // Tamanho da área de categorias
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categorias.length,
+                        itemBuilder: (context, index) {
+                          final categoria = categorias[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Chip(
+                              label: Text(categoria['tipo']),
+                              backgroundColor: const Color(0xFFC54444),
+                              labelStyle: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+              const SizedBox(height: 20),
+
+              // Exibição dos produtos
               const Text(
                 'Produtos',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -131,7 +199,14 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
               const SizedBox(height: 10),
               Expanded(
                 child: produtosFiltrados.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Center(
+                        child: Text(
+                          _searchController.text.isEmpty
+                              ? 'Nenhum produto disponível.'
+                              : 'Nenhum produto encontrado para "${_searchController.text}".',
+                          style: const TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      )
                     : ListView.builder(
                         itemCount: produtosFiltrados.length,
                         itemBuilder: (context, index) {
@@ -156,7 +231,8 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
                               description: produto['descricao'],
                               price: 'R\$ ${produto['preco'].toString().replaceAll('.', ',')}',
                               size: produto['tamanho'],
-                              imageUrl: imageUrl, // Correção aqui
+                              imageUrl: imageUrl,
+                              onAddToCart: () => adicionarAoCarrinho(produto),
                             ),
                           );
                         },
@@ -177,7 +253,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
+            icon: Icon(Icons.local_offer),
             label: 'Cupons',
           ),
           BottomNavigationBarItem(
@@ -200,6 +276,7 @@ class ProductCard extends StatelessWidget {
   final String price;
   final String size;
   final String imageUrl;
+  final VoidCallback onAddToCart;
 
   const ProductCard({
     super.key,
@@ -208,6 +285,7 @@ class ProductCard extends StatelessWidget {
     required this.price,
     required this.size,
     required this.imageUrl,
+    required this.onAddToCart,
   });
 
   @override
@@ -241,21 +319,12 @@ class ProductCard extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
-                    overflow: TextOverflow.ellipsis,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    description,
-                    style: TextStyle(color: Colors.grey[600]),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Tamanho: $size',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 10),
+                  Text(description),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -264,21 +333,17 @@ class ProductCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFC54444),
+                          color: Color(0xFFC54444), // Cor vermelha
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Lógica para adicionar ao carrinho
-                        },
+                      ElevatedButton.icon(
+                        onPressed: onAddToCart,
+                        icon: const Icon(Icons.add_shopping_cart),
+                        label: const Text('Adicionar'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFC54444),
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                          backgroundColor: const Color(0xFFC54444),
                         ),
-                        child: const Text('Adicionar'),
                       ),
                     ],
                   ),

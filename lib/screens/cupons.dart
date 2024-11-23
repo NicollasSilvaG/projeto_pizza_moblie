@@ -70,7 +70,7 @@ class _CuponsScreenState extends State<CuponsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart),
-            color: const Color(0xFF151414), // Define a cor do ícone do carrinho como branco
+            color: const Color(0xFF2B1C1C), // Define a cor do ícone do carrinho como branco
             onPressed: () {
               Navigator.pushNamed(context, '/carrinho');
             },
@@ -146,7 +146,7 @@ class _CuponsScreenState extends State<CuponsScreen> {
             label: 'Pedidos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
+            icon: Icon(Icons.local_offer),
             label: 'Cupons',
           ),
           BottomNavigationBarItem(
