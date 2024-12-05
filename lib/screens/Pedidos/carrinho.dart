@@ -9,8 +9,8 @@ class CarrinhoScreen extends StatefulWidget {
 
 class _CarrinhoScreenState extends State<CarrinhoScreen> {
   final List<CartItem> cartItems = [
-    CartItem(name: 'Xis Frango com Catupiry', price: 14.90, quantity: 1),
-    CartItem(name: 'Xis Coração', price: 16.90, quantity: 1),
+    CartItem(name: 'Pizza de Calabresa com Queijo', price: 35.60, quantity: 1),
+    CartItem(name: 'Refrigerante Lata', price: 6.90, quantity: 2),
   ];
 
   double get total => cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
@@ -36,11 +36,10 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
           "Meu Carrinho",
           style: TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.bold,  // Título em negrito
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
-          // Botão "Limpar Carrinho" com texto e ícone
           TextButton.icon(
             onPressed: clearCart,
             icon: const Icon(Icons.delete_forever, color: Colors.white),
@@ -51,20 +50,20 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
           ),
         ],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),  // A seta é da mesma cor que o título
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
-      backgroundColor: Colors.white,  // Cor do fundo branca
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Produtos Selecionados',  // Cor alterada para Color(0xFF2B1C1C)
+              'Produtos Selecionados',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -72,7 +71,6 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
             Expanded(
               child: ListView(
                 children: [
@@ -80,16 +78,12 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                 ],
               ),
             ),
-
-            // Linha divisória entre a lista de itens e a área de total
             const Divider(
-              color: Color(0xFF2B1C1C),  // Cor da linha
-              thickness: 2,  // Espessura da linha
-              height: 20,  // Espaçamento ao redor da linha
+              color: Color(0xFF2B1C1C),
+              thickness: 2,
+              height: 20,
             ),
-            
             const SizedBox(height: 16),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -102,13 +96,12 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFC54444),  // Cor do total igual a da AppBar
+                    color: Color(0xFFC54444),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-
             TextButton.icon(
               onPressed: () {
                 Navigator.pushNamed(context, '/home');
@@ -120,13 +113,12 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
               ),
             ),
             const SizedBox(height: 8),
-
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/finalizar_pedido');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2B1C1C),  // Cor alterada para o valor especificado
+                backgroundColor: const Color(0xFF2B1C1C),
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -135,7 +127,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
               child: const Center(
                 child: Text(
                   'Continuar',
-                  style: TextStyle(fontSize: 18, color: Colors.white),  // Texto branco
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ),
@@ -156,10 +148,14 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            Container(
-              color: Colors.orange,
-              width: 60,
-              height: 60,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0), // Adiciona bordas arredondadas
+              child: Image.asset(
+                'assets/150x150.jpg', // Caminho para a imagem
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -172,20 +168,19 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 5),
-                  // Preço do produto com a mesma cor da AppBar
                   Text(
                     'R\$${formatCurrency(item.price)}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFC54444),  // Cor alterada para a da AppBar
+                      color: Color(0xFFC54444),
                     ),
                   ),
                   const SizedBox(height: 5),
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.remove_circle_outline, color: Color(0xFF2B1C1C)),  // Cor alterada
+                        icon: const Icon(Icons.remove_circle_outline, color: Color(0xFF2B1C1C)),
                         onPressed: () {
                           setState(() {
                             if (item.quantity > 1) {
@@ -198,7 +193,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                       ),
                       Text(item.quantity.toString()),
                       IconButton(
-                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2B1C1C)),  // Cor alterada
+                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2B1C1C)),
                         onPressed: () {
                           setState(() {
                             item.quantity++;
@@ -207,7 +202,6 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                       ),
                     ],
                   ),
-                  // Adicionando o mini botão de "Ver mais"
                   TextButton(
                     onPressed: () {
                       // Lógica para ver mais detalhes do produto
@@ -215,7 +209,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                     child: const Text(
                       "Ver mais...",
                       style: TextStyle(
-                        color: Color(0xFF2B1C1C),  // Cor alterada
+                        color: Color(0xFF2B1C1C),
                         decoration: TextDecoration.underline,
                         fontSize: 14,
                       ),
@@ -226,9 +220,8 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
             ),
             Column(
               children: [
-                // Ícone da lixeira
                 IconButton(
-                  icon: const Icon(Icons.delete, color: Color(0xFF2B1C1C)),  // Cor alterada
+                  icon: const Icon(Icons.delete, color: Color(0xFF2B1C1C)),
                   onPressed: () {
                     setState(() {
                       cartItems.remove(item);

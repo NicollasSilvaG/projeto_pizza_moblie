@@ -15,7 +15,7 @@ class TelaInicialScreenState extends State<TelaInicialScreen> {
   List<dynamic> produtos = [];
   List<dynamic> produtosFiltrados = [];
   List<dynamic> categorias = []; // Lista para armazenar as categorias
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {

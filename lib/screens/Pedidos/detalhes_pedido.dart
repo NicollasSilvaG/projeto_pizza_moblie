@@ -78,8 +78,7 @@ class VisualizarPedidoScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              "Aqui você pode adicionar informações detalhadas sobre o pedido, "
-              "como a quantidade, ingredientes personalizados, observações do cliente, etc.",
+              "Aqui vamos colocar as informações detalhadas sobre o pedido, ",
               style: TextStyle(fontSize: 16),
             ),
           ],
